@@ -6,7 +6,6 @@ require 'bitbucket_rest_api/constants'
 require 'bitbucket_rest_api/utils/url'
 require 'bitbucket_rest_api/connection'
 require 'bitbucket_rest_api/deprecation'
-require 'bitbucket_rest_api/core_ext/ordered_hash'
 
 module BitBucket
   extend Configuration
@@ -77,7 +76,8 @@ module BitBucket
                :Issues          => 'issues',
                :User            => 'user',
                :Users           => 'users',
-               :Invitations     => 'invitations'
+               :Invitations     => 'invitations',
+               :Teams           => 'teams'
 
   #:Teams           => 'teams',
   #:PullRequests    => 'pull_requests',

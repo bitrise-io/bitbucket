@@ -10,7 +10,7 @@ module BitBucket
     def get_request(path, params={}, options={})
       request(:get, path, params, options)
     end
-    
+
 
     def patch_request(path, params={}, options={})
       request(:patch, path, params, options)
@@ -28,7 +28,7 @@ module BitBucket
       request(:delete, path, params, options)
     end
 
-    def request(method, path, params, options)
+    def request(method, path, params, options={})
       if !METHODS.include?(method)
         raise ArgumentError, "unkown http method: #{method}"
       end
@@ -40,13 +40,18 @@ module BitBucket
       path = (conn.path_prefix + path).gsub(/\/\//,'/') if conn.path_prefix != '/'
 
       response = conn.send(method) do |request|
+        request['Authorization'] = "Bearer #{new_access_token}" unless new_access_token.nil?
         case method.to_sym
         when *(METHODS - METHODS_WITH_BODIES)
           request.body = params.delete('data') if params.has_key?('data')
           request.url(path, params)
         when *METHODS_WITH_BODIES
           request.path = path
-          request.body = extract_data_from_params(params) unless params.empty?
+          unless params.empty?
+            # data = extract_data_from_params(params)
+            # request.body = MultiJson.dump(data)
+            request.body = MultiJson.dump(params)
+          end
         end
       end
       response.body
@@ -54,10 +59,13 @@ module BitBucket
 
     private
 
-    def extract_data_from_params(params) # :nodoc:
-      return params['data'] if params.has_key?('data') and !params['data'].nil?
-      return params
-    end
+    # def extract_data_from_params(params) # :nodoc:
+    #   if params.has_key?('data') and !params['data'].nil?
+    #     params['data']
+    #   else
+    #     params
+    #   end
+    # end
 
     def _extract_mime_type(params, options) # :nodoc:
       options['resource']  = params['resource'] ? params.delete('resource') : ''

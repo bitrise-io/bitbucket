@@ -16,19 +16,16 @@ module BitBucket
 
     # An API for users to manage their own tokens.
     def oauth(options = {})
-      raise "Unimpletmented"
-      #@oauth ||= ApiFactory.new 'Authorizations', options
+      @oauth ||= ApiFactory.new 'Request::OAuth', options
     end
     alias :authorizations :oauth
 
     def teams(options = {})
-      raise "Unimplemented"
-      #@teams ||= ApiFactory.new 'teams', options
+      @teams ||= ApiFactory.new 'Teams', options
     end
 
     def pull_requests(options = {})
-      raise "Unimplemented"
-      #@pull_requests ||= ApiFactory.new 'PullRequests', options
+      @pull_requests ||= ApiFactory.new 'Repos::PullRequest', options
     end
 
     def repos(options = {})
